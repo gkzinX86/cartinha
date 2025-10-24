@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Para Você 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #E8D8FB 0%, #EAD7F7 50%, #D9B8F0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Hello Kitty */
+        .hello-kitty-deco {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hello-kitty-deco::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 12px;
+            width: 14px;
+            height: 18px;
+            background: white;
+            border-radius: 50% 50% 0 0;
+            transform: rotate(-25deg);
+        }
+
+        .hello-kitty-deco::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 12px;
+            width: 14px;
+            height: 18px;
+            background: white;
+            border-radius: 50% 50% 0 0;
+            transform: rotate(25deg);
+        }
+
+        .hello-kitty-deco {
+            background: 
+                radial-gradient(circle at 20px 25px, #333 3px, transparent 3px),
+                radial-gradient(circle at 40px 25px, #333 3px, transparent 3px),
+                radial-gradient(circle at 15px 32px, #FF66B2 6px, transparent 6px),
+                radial-gradient(circle at 45px 32px, #FF66B2 6px, transparent 6px),
+                white;
+        }
+
+        /* Envelope Container */
+        .envelope-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 25px;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            touch-action: manipulation;
+        }
+
+        .envelope:active:not(.open) {
+            transform: scale(0.98);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, #D9B8F0 0%, #EAD7F7 100%);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            transform-origin: top center;
+            transition: transform 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 2;
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(-180deg);
+        }
+
+        /* Efeito de brilho quando abre */
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: all 0.6s ease;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .envelope.open::before {
+            width: 300px;
+            height: 300px;
+            opacity: 1;
+            transition: all 0.4s ease;
+        }
+
+        /* Corações flutuantes */
+        .hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 4;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .envelope.open .hearts {
+            opacity: 1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 18px;
+            animation: floatUp 3s ease-in infinite;
+            opacity: 0;
+        }
+
+        .heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 30%; animation-delay: 0.5s; }
+        .heart:nth-child(3) { left: 50%; animation-delay: 1s; }
+        .heart:nth-child(4) { left: 70%; animation-delay: 1.5s; }
+        .heart:nth-child(5) { left: 90%; animation-delay: 2s; }
+
+        @keyframes floatUp {
+            0% {
+                bottom: -10%;
+                opacity: 0;
+                transform: translateX(0) scale(0.5);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                bottom: 110%;
+                opacity: 0;
+                transform: translateX(20px) scale(1);
+            }
+        }
+
+        .card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateY(120%) scale(0.8);
+            width: 90%;
+            max-height: 85%;
+            background: white;
+            border-radius: 8px;
+            padding: 25px 20px;
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s;
+            overflow-y: auto;
+            z-index: 1;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .envelope.open .card {
+            transform: translate(-50%, -50%) translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .card h1 {
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #D9B8F0, #FF66B2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 18px;
+            font-weight: 700;
+            animation: fadeInDown 0.8s ease 1.2s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #333;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease 1.4s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Botões */
+        button {
+            background: linear-gradient(135deg, #FF66B2 0%, #D9B8F0 100%);
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(255, 102, 178, 0.35);
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+            -webkit-appearance: none;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #D9B8F0 0%, #EAD7F7 100%);
+            color: #333;
+            font-size: 0.9rem;
+            padding: 12px 26px;
+            margin-top: 10px;
+            animation: fadeIn 1s ease 1.6s both;
+        }
+
+        /* Responsividade Mobile */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .hello-kitty-deco {
+                width: 50px;
+                height: 50px;
+                margin-bottom: 15px;
+            }
+
+            .hello-kitty-deco::before,
+            .hello-kitty-deco::after {
+                width: 12px;
+                height: 15px;
+            }
+
+            .hello-kitty-deco {
+                background: 
+                    radial-gradient(circle at 17px 21px, #333 2.5px, transparent 2.5px),
+                    radial-gradient(circle at 33px 21px, #333 2.5px, transparent 2.5px),
+                    radial-gradient(circle at 13px 27px, #FF66B2 5px, transparent 5px),
+                    radial-gradient(circle at 37px 27px, #FF66B2 5px, transparent 5px),
+                    white;
+            }
+
+            .envelope {
+                height: 240px;
+            }
+
+            .envelope-flap {
+                height: 120px;
+            }
+
+            .card {
+                padding: 20px 18px;
+            }
+
+            .card h1 {
+                font-size: 1.4rem;
+                margin-bottom: 15px;
+            }
+
+            .card p {
+                font-size: 0.95rem;
+                line-height: 1.6;
+                margin-bottom: 18px;
+            }
+
+            button {
+                padding: 14px 28px;
+                font-size: 0.95rem;
+            }
+
+            .btn-download {
+                padding: 11px 24px;
+                font-size: 0.85rem;
+            }
+
+            .heart {
+                font-size: 16px;
+            }
+        }
+
+        /* Mobile muito pequeno */
+        @media (max-width: 360px) {
+            .envelope {
+                height: 220px;
+            }
+
+            .card h1 {
+                font-size: 1.3rem;
+            }
+
+            .card p {
+                font-size: 0.9rem;
+            }
+
+            button {
+                padding: 12px 24px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Landscape mobile */
+        @media (max-height: 600px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+
+            .hello-kitty-deco {
+                margin-bottom: 10px;
+            }
+
+            .envelope {
+                height: 200px;
+            }
+
+            .envelope-container {
+                margin-bottom: 15px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .card h1 {
+                font-size: 1.3rem;
+                margin-bottom: 10px;
+            }
+
+            .card p {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+
+            button {
+                padding: 10px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hello-kitty-deco"></div>
+        
+        <div class="envelope-container">
+            <div class="envelope" id="envelope">
+                <div class="envelope-flap"></div>
+                <div class="hearts">
+                    <div class="heart">💕</div>
+                    <div class="heart">💖</div>
+                    <div class="heart">💗</div>
+                    <div class="heart">💕</div>
+                    <div class="heart">💖</div>
+                </div>
+                <div class="card">
+                    <h1>1 Mês Juntos 💕</h1>
+                    <p id="letter-text">
+                        Esses 30 dias ao seu lado foram incríveis! Cada momento com você é especial e me faz sorrir. 
+                        Que venham muitos mais dias de risadas, conversas e carinho. Você é incrível! ✨
+                    </p>
+                    <button class="btn-download" id="btnDownload">💾 Guardar Carta</button>
+                </div>
+            </div>
+        </div>
+        
+        <button id="btnToggle">💌 Abrir Cartinha</button>
+    </div>
+
+    <script>
+        const envelope = document.getElementById('envelope');
+        const btnToggle = document.getElementById('btnToggle');
+        const btnDownload = document.getElementById('btnDownload');
+        const letterText = document.getElementById('letter-text');
+        
+        let isOpen = false;
+        
+        // Previne zoom duplo-toque no iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        btnToggle.addEventListener('click', function() {
+            isOpen = !isOpen;
+            
+            if (isOpen) {
+                envelope.classList.add('open');
+                btnToggle.textContent = '✉️ Fechar Cartinha';
+            } else {
+                envelope.classList.remove('open');
+                btnToggle.textContent = '💌 Abrir Cartinha';
+            }
+        });
+        
+        btnDownload.addEventListener('click', function() {
+            const text = letterText.textContent;
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'cartinha-1-mes.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>
